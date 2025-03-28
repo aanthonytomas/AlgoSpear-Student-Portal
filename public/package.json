@@ -1,0 +1,48 @@
+{
+  "name": "public",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "@unhead/vue": "^1.11.18",
+    "aos": "^2.3.4",
+    "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "canvas-confetti": "^1.9.3",
+    "codemirror": "^6.0.1",
+    "flatpickr": "^4.6.13",
+    "jquery": "^3.7.1",
+    "jsvectormap": "^1.6.0",
+    "localstorage-slim": "^2.7.1",
+    "sweetalert2": "^11.15.10",
+    "swiper": "^11.1.15",
+    "uninstall": "^0.0.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "vue-toast-notification": "^3.1.3",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/jquery": "^3.5.32",
+    "@types/node": "^22.10.5",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vue/tsconfig": "^0.7.0",
+    "npm-run-all2": "^7.0.2",
+    "sass-embedded": "^1.85.1",
+    "typescript": "~5.6.3",
+    "vite": "^6.0.5",
+    "vite-plugin-vue-devtools": "^7.6.8",
+    "vue-tsc": "^2.1.10"
+  }
+}

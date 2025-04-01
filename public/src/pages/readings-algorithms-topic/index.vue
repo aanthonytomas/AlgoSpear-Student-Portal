@@ -5,32 +5,35 @@
       <div class="container mt-5 py-5">
         <h1 class="text-center mt-5">Algorithms</h1>
         <div class="row mt-5">
-          <!-- Changed from col-4 to responsive sizing -->
+          <!-- Sidebar with sticky positioning -->
           <div class="col-lg-4 col-md-5 col-12 mb-4">
-            <ElemProgressbar :loading="loading" />
-            <div v-if="topic == 'sorting'">
-              <ProgressBar :height="40" :percentage="sortingProgress" />
-              <CourseList 
-              title="Sorting" 
-              :unlock="reset_unlock" 
-              :btn_disabled="false" 
-              :list="list_sorting" 
-              :articlesRead="articleRed"
-              @view="onViewSorting" />
-            </div>
+            <div class="sticky-sidebar">
+              <ElemProgressbar :loading="loading" />
+              <div v-if="topic == 'sorting'">
+                <ProgressBar :height="40" :percentage="sortingProgress" />
+                <CourseList 
+                title="Sorting" 
+                :unlock="reset_unlock" 
+                :btn_disabled="false" 
+                :list="list_sorting" 
+                :articlesRead="articleRed"
+                @view="onViewSorting" />
+              </div>
 
-            <div v-if="topic == 'searching'">
-              <ProgressBar :height="40" :percentage="searchingProgress" />
-              <CourseList 
-              title="Searching" 
-              :unlock="reset_unlock" 
-              :btn_disabled="list_search_locked" 
-              :list="list_search" 
-              :articlesRead="articleRed"
-              @view="onViewSearching" />
+              <div v-if="topic == 'searching'">
+                <ProgressBar :height="40" :percentage="searchingProgress" />
+                <CourseList 
+                title="Searching" 
+                :unlock="reset_unlock" 
+                :btn_disabled="list_search_locked" 
+                :list="list_search" 
+                :articlesRead="articleRed"
+                @view="onViewSearching" />
+              </div>
             </div>
           </div>
-          <!-- Changed from col-8 to responsive sizing -->
+          
+          <!-- Content area -->
           <div class="col-lg-8 col-md-7 col-12">            
             <SectionArticleHeader :article="article" :user="user" :reset="reset" @completed="isArticleGroupDoneLocal()" />
             <div class="text-dark mt-5">
@@ -55,6 +58,18 @@
     <SectionFooter/>
   </div>
 </template>
+
+<style scoped>
+.sticky-sidebar {
+  position: sticky;
+  top: 120px;
+  z-index: 0;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+</style>
+
 <script lang="ts">
 
   import { defineComponent, toRaw } from 'vue';

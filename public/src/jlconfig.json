@@ -4,7 +4,7 @@
     },
     "currency": "USD", 
     "excercises_limit": 5,
-    "excercises_limit_passing": 4,
+    "excercises_limit_passing": 1,
     "quiz_limit": 15,
     "quiz_limit_passing": 1,
     "exercise_time" : 2.5,

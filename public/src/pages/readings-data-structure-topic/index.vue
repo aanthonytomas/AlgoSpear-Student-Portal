@@ -1,45 +1,37 @@
 <template>
   <div>
-    <SectionHeader/>
+    <SectionHeader />
     <main class="main">
       <div class="container mt-5 py-5">
         <h1 class="text-center mt-5">Data Structure</h1>
         <div class="row mt-5">
-          <!-- Change from fixed col-4 to responsive sizing -->
+          <!-- Sidebar with sticky positioning -->
           <div class="col-lg-4 col-md-5 col-12 mb-4">
-            <ElemProgressbar :loading="loading" />
-            <!--Array Topics-->
-            <div v-if="topic == 'array'">
-              <ProgressBar :percentage="arrayProgressPercentage" :height="40"/>
-              <CourseList title="Array" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="false" :list="array_list" @view="onView"/>
-            </div>
-
-            <!--Linked List Topics-->
-            <div v-else-if="topic == 'linked-list'">
-              <ProgressBar :percentage="linkListProgressPercentage" :height="40"/>
-              <CourseList title="Linked List" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="linked_list_locked" :list="linked_list" @view="onViewLinkList" />
-            </div>
-
-            <!--Stacks Topics-->
-            <div v-else-if="topic == 'stacks'">
-              <ProgressBar :percentage="stacksProgressPercentage" :height="40"/>
-              <CourseList title="Stacks" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="list_stacks_locked" :list="list_stacks" @view="onViewStack" />
-            </div>
-
-            <!--Queues Topics-->
-            <div v-else-if="topic == 'queues'">
-              <ProgressBar :percentage="queuesProgressPercentage" :height="40"/>
-              <CourseList title="Queues" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="list_queues_locked" :list="list_queues" @view="onViewQueues" />
-            </div>
-
-            <!--Graphs Topics-->
-            <div v-else-if="topic == 'graphs'">
-              <ProgressBar :percentage="graphsProgressPercentage" :height="40"/>
-              <CourseList title="Graphs" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="list_graphs_locked" :list="list_graphs" @view="onViewGraphs" />
+            <div class="sticky-sidebar">
+              <ElemProgressbar :loading="loading" />
+              <div v-if="topic == 'array'">
+                <ProgressBar :percentage="arrayProgressPercentage" :height="40" />
+                <CourseList title="Array" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="false" :list="array_list" @view="onView" />
+              </div>
+              <div v-else-if="topic == 'linked-list'">
+                <ProgressBar :percentage="linkListProgressPercentage" :height="40" />
+                <CourseList title="Linked List" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="linked_list_locked" :list="linked_list" @view="onViewLinkList" />
+              </div>
+              <div v-else-if="topic == 'stacks'">
+                <ProgressBar :percentage="stacksProgressPercentage" :height="40" />
+                <CourseList title="Stacks" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="list_stacks_locked" :list="list_stacks" @view="onViewStack" />
+              </div>
+              <div v-else-if="topic == 'queues'">
+                <ProgressBar :percentage="queuesProgressPercentage" :height="40" />
+                <CourseList title="Queues" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="list_queues_locked" :list="list_queues" @view="onViewQueues" />
+              </div>
+              <div v-else-if="topic == 'graphs'">
+                <ProgressBar :percentage="graphsProgressPercentage" :height="40" />
+                <CourseList title="Graphs" :articlesRead="articleRed" :unlock="reset_unlock" :btn_disabled="list_graphs_locked" :list="list_graphs" @view="onViewGraphs" />
+              </div>
             </div>
           </div>
-          <!-- Change from fixed col-8 to responsive sizing -->
-          <div class="col-lg-8 col-md-7 col-12">            
+          <div class="col-lg-8 col-md-7 col-12">
             <SectionArticleHeader :article="article" :user="user" :reset="reset" @completed="isArticleGroupDoneLocal()" />
             <div class="text-dark mt-5">
               <div v-if="article?.content" v-html="article?.content"></div>
@@ -60,9 +52,21 @@
         </div>
       </div>
     </main>
-    <SectionFooter/>
+    <SectionFooter />
   </div>
 </template>
+
+<style scoped>
+.sticky-sidebar {
+  position: sticky;
+  top: 120px;
+  z-index: 0;
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+}
+</style>
+
 <script lang="ts">
   import { defineComponent, toRaw } from 'vue';
   import { fetchAllArticlesGraphs, fetchAllArticlesQueues, fetchAllArticlesStacks, isArticleGroupDone, resetReadingTimeByGroup, lsGetUser, fetchAllArticlesArrays, fetchAllArticlesLinkedList, printDevLog, fetchSingleArticleByTopic, scrollToTop, createReadLogs, randomNumbers, queryDelete, SystemConnections,fetchArticleReadsById,isFundamentalDone } from "@/uikit-api";
@@ -457,3 +461,4 @@
     }
   });
 </script>
+

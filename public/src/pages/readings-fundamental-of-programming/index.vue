@@ -8,16 +8,18 @@
         <!-- Improved Responsive Row -->
         <div class="row mt-5">
           <div class="col-lg-4 col-md-5 col-12 mb-4">
-            <ElemProgressbar :loading="loading" />
-            <ProgressBar :height="40" :percentage="progress" />
-            <CourseList 
-              title="Fundamental of Programming"
-              :btn_disabled="false"
-              :list="list"
-              :articlesRead="articleRed"
-              :unlock="reset_unlock"
-              @view="onView" 
-            />
+            <div class="sticky-sidebar">
+              <ElemProgressbar :loading="loading" />
+              <ProgressBar :height="40" :percentage="progress" />
+              <CourseList 
+                title="Fundamental of Programming"
+                :btn_disabled="false"
+                :list="list"
+                :articlesRead="articleRed"
+                :unlock="reset_unlock"
+                @view="onView" 
+              />
+            </div>
           </div>
 
           <div class="col-lg-8 col-md-7 col-12">
@@ -34,7 +36,7 @@
               <div v-else class="p-4">
                 <div class="card text-center">
                   <div class="card-body">
-                    <h3 class="p-4" style="color: #a9a0a0;" id="selectreading">
+                    <h3 class="p-4 text-muted" id="selectreading">
                       Select reading material to start
                     </h3>
                     <div class="d-flex justify-content-center pb-5">
@@ -51,7 +53,6 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -60,6 +61,16 @@
     <SectionFooter />
   </div>
 </template>
+<style scoped>
+.sticky-sidebar {
+  position: sticky;
+  top: 120px;
+  z-index: 0;
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+}
+</style>
 
 <script lang="ts">
   import { defineComponent, toRaw } from 'vue';

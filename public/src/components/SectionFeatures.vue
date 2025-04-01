@@ -13,7 +13,7 @@
               <div class="icon-box">
                 <i class="bi bi-buildings"></i>
                 <h3>Learning Assessment</h3>
-                <p>Learn and master the Data Strucutures and Algorithms and Test your learnings by taking assessment.</p>
+                <p>Learn the Data Strucutures and Algorithms and Test your learnings by taking assessment.</p>
               </div>
             </div>
             <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">

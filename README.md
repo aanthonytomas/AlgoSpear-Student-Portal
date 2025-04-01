@@ -39,8 +39,7 @@ The **Interactive Learning System** is an educational platform designed to help 
 ## Tech Stack
 - **Frontend:** Vue.js (Student & Admin Portals)
 - **Backend:** Laravel 10.48.28
-- **Database:** Small-scale database for storing user progress and quiz data
-- **Hosting:** Freenom (for free custom domains) and potential GoDaddy testing
+- **Database:** PhpAdmin, a small-scale database for storing user progress and quiz data
 
 ## Contribution
 Contributions are welcome! Please follow these steps:

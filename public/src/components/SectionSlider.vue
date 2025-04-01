@@ -17,7 +17,7 @@
               <img src="/src/assets/img/structured-data.png" class="img-fluid animated" alt="">
             </div>
             <div class="col-lg-6 d-flex flex-column justify-content-center">
-              <h1 class="text-white">Master <span>Data Struct</span>ures & <span>Algorith</span>ms</h1>
+              <h1 class="text-white">Comprehend <span>Data Struct</span>ures & <span>Algorith</span>ms</h1>
               <p class="text-white"><small>Learn Data Structures and Algorithms with interactive lessons and hands-on coding challenges. <strong>Track your progress</strong> to stay motivated and measure your growth. Build a strong foundation for user's education and career.</small></p>
               <div class="d-flex">
                 <router-link class="btn-get-started fw-bold" to="/readings" >

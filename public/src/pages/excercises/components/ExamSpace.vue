@@ -68,7 +68,23 @@
                   <input v-model="question.answer_input" type="text" class="form-control">
                 </div>
               </div>
-              <div class="card-footer d-flex justify-content-end">
+              <div class="card-footer d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                  <button 
+                    class="btn btn-secondary me-2" 
+                    @click="onPreviousQuestion" 
+                    :disabled="currentQuestionIndex === 0"
+                  >
+                    Previous
+                  </button>
+                  <button 
+                    class="btn btn-secondary me-2" 
+                    @click="onNextQuestion" 
+                    :disabled="currentQuestionIndex === list.length - 1"
+                  >
+                    Next
+                  </button>
+                </div>
                 <button class="btn btn-primary w-50" @click="onSubmitAnswer(i)" :disabled="loading.btn_submit">
                   <span v-if="loading.btn_submit">
                     <span class="spinner-border spinner-border-sm me-2" role="status"></span>
@@ -132,10 +148,27 @@ export default defineComponent({
       backButton: false,
       stopTimer: null as null | (() => void),
       isUserTryingToLeave: false,
-      isTimesUp: false  // Flag to track if time is up
+      isTimesUp: false,  // Flag to track if time is up
+      currentQuestionIndex: 0  // Added to track current question for navigation
     }
   },
   methods: {
+    // New method for previous question navigation
+    onPreviousQuestion() {
+      if (this.currentQuestionIndex > 0) {
+        this.currentQuestionIndex--;
+        this.swiper.slidePrev();
+      }
+    },
+
+    // New method for next question navigation
+    onNextQuestion() {
+      if (this.currentQuestionIndex < this.list.length - 1) {
+        this.currentQuestionIndex++;
+        this.swiper.slideNext();
+      }
+    },
+    
     async onBack(){
       // Skip confirmation dialog if timer is already up
       if (this.isTimesUp) {
@@ -273,6 +306,7 @@ export default defineComponent({
           });
         }
         else {
+          this.currentQuestionIndex++; // Update the index when moving to next question
           this.swiper.slideNext();
         }
       }
@@ -292,6 +326,10 @@ export default defineComponent({
     },
     onSwiper(swiper: any) {
       this.swiper = swiper;
+      // Add event listener to update currentQuestionIndex when slide changes
+      swiper.on('slideChange', () => {
+        this.currentQuestionIndex = swiper.activeIndex;
+      });
     }
   },
   watch: {
@@ -310,6 +348,7 @@ export default defineComponent({
           this.score = 0;
           this.passed = 0;
           this.isTimesUp = false; // Reset the times up flag when starting a new exercise
+          this.currentQuestionIndex = 0; // Reset current question index
           this.swiper.slideTo(0);
           printDevLog("Props:", toRaw(this.$props));
           printDevLog("Data:", toRaw(this.$data));
@@ -336,6 +375,7 @@ export default defineComponent({
   created(){
     this.exercise_duration = jlconfig.exercise_time * 60;
     this.isTimesUp = false; // Initialize the flag when component is created
+    this.currentQuestionIndex = 0; // Initialize current question index
   },
   beforeUnmount(){
     console.log("Component Destroyed!");

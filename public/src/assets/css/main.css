@@ -40,6 +40,38 @@
   scroll-behavior: smooth;
 }
 
+html {
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+
+body {
+  scroll-padding-top: 0;
+}
+
+html, body {
+  scroll-behavior: auto;
+  scroll-behavior: smooth;
+}
+
+/* Force scroll position to top on page load */
+html {
+  overflow-anchor: none;
+}
+
+body {
+  overflow-anchor: none;
+  height: 100%;
+}
+
+/* This ensures the scroll position resets */
+body::before {
+  content: "";
+  display: block;
+  height: 0;
+  scroll-snap-align: start;
+}
+
 body {
   color: var(--default-color);
   background-color: var(--background-color);

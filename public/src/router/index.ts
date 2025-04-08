@@ -215,7 +215,6 @@ const router = createRouter({
         requiresAuth: true
       },
     },
-
     {
       path: '/algorithms-searching',
       name: 'algorithms_searching',
@@ -235,7 +234,15 @@ const router = createRouter({
       },
     }
   ],
-})
+  scrollBehavior(to, from, savedPosition) {
+    // If the user used browser back/forward buttons and has a saved position, use that
+    if (savedPosition) {
+      return savedPosition;
+    }
+    // Otherwise, scroll to top
+    return { top: 0 };
+  }
+});
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = isAuthenticated(); // Example of checking if user is logged in via localStorage

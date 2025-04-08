@@ -10,7 +10,7 @@
           </div>
           <div class="col-4 mb-5">
             <div class="card">
-              <img class="visual-image" src="/src/assets/img/gif/arrays.gif" />
+              <img class="visual-image" src="/src/assets/img/gif/sorting.gif" />
               <div class="card-body">
                 <h5>Sorting Visualization</h5>
                 <p><small>Demonstrate reordering of elements in ascending or descending order.</small></p>
@@ -24,7 +24,7 @@
           </div>
           <div class="col-4 mb-5">
             <div class="card">
-              <img class="visual-image" src="/src/assets/img/gif/linkedlist.gif" />
+              <img class="visual-image" src="/src/assets/img/gif/searching.gif" />
               <div class="card-body">
                 <h5>Searching Visualization</h5>
                 <p><small>Illustrate locating an element within a dataset using various algorithms.</small></p>

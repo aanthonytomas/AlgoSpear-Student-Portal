@@ -20,6 +20,11 @@
         <div class="col-lg-3 col-md-3 footer-links">
           <h4>Info</h4>
           <p>Understand complex Data Structures and Algorithms through engaging, interactive visualizations.</p>
+
+            <h4 class="credits" href="#" @click="openModal">Media Credits</h4>
+            <p>
+            Special thanks to all media sources and contributors for their valuable content and resources.
+          </p>
         </div>
         <div class="col-lg-2 col-md-3 footer-links">
           <h4>Links</h4>
@@ -46,20 +51,73 @@
         </div>
       </div>
     </div>
+
+    <!-- Media Credits Modal -->
+    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <h3>Media Credits</h3>
+        <ul>
+          <li>Undraw.co</li>
+          <li>Canva</li>
+          <li>Others</li>
+        </ul>
+        <button @click="closeModal" class="btn btn-primary">Close</button>
+      </div>
+    </div>
   </footer>
 </template>
 
 <script>
 export default {
-  name: 'FooterComponent'
-}
+  name: 'FooterComponent',
+  data() {
+    return {
+      showModal: false
+    };
+  },
+  methods: {
+    openModal() {
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+    }
+  }
+};
 </script>
 
 <style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: rgb(9, 39, 122);
+  padding: 20px;
+  margin-right: 20rem;
+  margin-left: 20rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
 .footer-youtube .btn-danger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.credits:hover {
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: underline;
 }
 
 .footer-youtube .btn-danger i {

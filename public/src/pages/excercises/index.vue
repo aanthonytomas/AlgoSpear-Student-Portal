@@ -264,13 +264,51 @@ export default defineComponent({
       this.examVue = false;
     },
 
-    async onPassed() {
+    async onPassed(data) {
       this.swiper.slideTo(0);
+      this.examVue = false;
+      
+      // Update the local exercise data without reloading everything
+      if (data && data.categoryId) {
+        this.excercise = this.excercise.map((ex) => {
+          if (ex.header.group_refid === data.categoryId) {
+            return {
+              ...ex,
+              completed: true,
+              passed: true,
+              attempt: (ex.attempt || 0) + 1,
+              score: data.score
+            };
+          }
+          return ex;
+        });
+      }
+      
+      // Also update from server to ensure data consistency
       await this.initExercises();
     },
 
-    async onFail() {
+    async onFail(data) {
       this.swiper.slideTo(0);
+      this.examVue = false;
+      
+      // Update the local exercise data without reloading everything
+      if (data && data.categoryId) {
+        this.excercise = this.excercise.map((ex) => {
+          if (ex.header.group_refid === data.categoryId) {
+            return {
+              ...ex,
+              completed: true,
+              passed: false,
+              attempt: (ex.attempt || 0) + 1,
+              score: data.score
+            };
+          }
+          return ex;
+        });
+      }
+      
+      // Also update from server to ensure data consistency
       await this.initExercises();
     },
 

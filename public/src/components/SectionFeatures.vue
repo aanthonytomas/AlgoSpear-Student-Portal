@@ -5,7 +5,7 @@
         <div class="col-xl-5 content">
           <h3>AlgoSpear</h3>
           <h2 class="mt-4">Features</h2>
-          <p>AlgoSpear is a Learning Management system with the goal of making learning enjoyable by aiming to bridge the gap in traditional learning methods into interactive learning concept using the known latest technology.</p>
+          <p>AlgoSpear is an innovative Learning Management System that reimagines learning by integrating the latest technology to create interactive experiences, effectively bridging the limitations of traditional methods.</p>
         </div>
         <div class="col-xl-7">
           <div class="row gy-4 icon-boxes">

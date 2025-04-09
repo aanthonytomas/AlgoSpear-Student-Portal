@@ -39,19 +39,17 @@
                     <table class="table table-hover table-striped mb-0">
                       <thead>
                         <tr>
-                          <th style="width: 10%;">#</th>
-                          <th style="width: 55%;">Question</th>
-                          <th style="width: 35%;">Your Answer</th>
+                          <th style="width: 5%;">#</th>
+                          <th style="width: 65%;">Question</th>
+                          <th style="width: 30%;">Your Answer</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="(question, i) in questions" :key="i" @click="showQuestionDetails(i)" role="button" class="question-row">
-                          <td>{{ i + 1 }}</td>
+                          <td class="text-center">{{ i + 1 }}</td>
                           <td>{{ question.question }}</td>
                           <td :class="question.is_corrrect === 1 ? 'text-success fw-bold' : 'text-danger fw-bold'">
                             {{ formatAnswerWithoutPrefix(question) }}
-                            <i v-if="question.is_corrrect === 1" class="bi bi-check-circle-fill text-success ms-1"></i>
-                            <i v-else class="bi bi-x-circle-fill text-danger ms-1"></i>
                           </td>
                         </tr>
                       </tbody>
@@ -241,7 +239,7 @@
           const answerText = choices[question.answer_input] || '';
   
           if (answerText) {
-            return this.truncateQuestion(answerText, 40);
+            return this.truncateQuestion(answerText, 30);
           }
   
           return 'Not answered';

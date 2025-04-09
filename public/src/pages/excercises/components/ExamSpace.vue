@@ -67,7 +67,7 @@
                   </div>
                   <div v-else class="input-group mb-3">
                     <span class="input-group-text">Answer</span>
-                    <input v-model.trim="question.answer_input" type="text" class="form-control">
+                    <input v-model="question.answer_input" type="text" class="form-control">
                   </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between">
@@ -230,21 +230,14 @@ export default defineComponent({
         }
       }, this.exercise_duration);
     },
-    // Helper method to normalize answers for comparison
-    normalizeAnswer(answer: string): string {
-      // Trim spaces, convert to lowercase, and normalize other potential formatting issues
-      return answer.trim().toLowerCase();
-    },
     async onSubmitAnswer(index: number) {
       if(!this.list[index]['answer_input']) {
         this.$toast.warning('Please provide your answer.');
       }
       else {
-        // Normalize both answers for comparison
-        const answer_correct = this.normalizeAnswer(this.list[index]['answer']);
-        const answer_input = this.normalizeAnswer(this.list[index]['answer_input']);
-        
-        if(answer_correct === answer_input) {
+        var answer_correct  = (this.list[index]['answer']).toLowerCase();
+        var answer_input    = (this.list[index]['answer_input']).toLowerCase();
+        if(answer_correct == answer_input) {
           this.score = this.score + 1;
           this.list[index]['is_corrrect'] = 1;
         }
@@ -302,33 +295,18 @@ export default defineComponent({
       }
     },
     async onSaveExcercises() {
-    const result = await queryInsertGetID({
-      connection: SystemConnections()['CONN_NPM_LMS'],
-      table: 'questionnaire_category_done',
-      columns: {
-        'user_refid': this.user?.user_refid,
-        'category_refid': this.category?.header?.group_refid,
-        'total': jlconfig.excercises_limit,
-        'score': this.score,
-        'passed': this.passed
-      }
-    });
-    
-    // Emit proper event with updated data to refresh parent component
-    if (this.passed) {
-      this.$emit('passed', {
-        categoryId: this.category?.header?.group_refid,
-        score: this.score
+      await queryInsertGetID({
+        connection: SystemConnections()['CONN_NPM_LMS'],
+        table: 'questionnaire_category_done',
+        columns: {
+          'user_refid': this.user?.user_refid,
+          'category_refid': this.category?.header?.group_refid,
+          'total': jlconfig.excercises_limit,
+          'score': this.score,
+          'passed': this.passed
+        }
       });
-    } else {
-      this.$emit('fail', {
-        categoryId: this.category?.header?.group_refid,
-        score: this.score
-      });
-    }
-    
-    return result;
-  },
+    },
     onSwiper(swiper: any) {
       this.swiper = swiper;
     },

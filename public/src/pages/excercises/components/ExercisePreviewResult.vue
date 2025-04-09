@@ -3,7 +3,7 @@
       <h1 class="text-center">Exercise Results</h1>
       <div class="row">
         <div class="col-sm-0 col-lg-3"></div>
-        <div class="col-sm-12 col-lg-6">
+        <div class="col-sm-12 col-lg-12">
           <div class="card mb-4 mt-2 sticky-card" :class="{ 'is-sticky': isSticky }">
             <div class="card-header d-flex justify-content-between align-items-center">
               <span>Exercise Summary</span>
@@ -30,8 +30,9 @@
               </div>
   
               <div class="">
-                <div class="card-header">
-                  <strong>Questions Overview</strong>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Questions Overview</strong>
+                    <p>Select list to view</p>
                 </div>
                 <div class="card-body p-0">
                   <div class="table-responsive">
@@ -39,14 +40,14 @@
                       <thead>
                         <tr>
                           <th style="width: 10%;">#</th>
-                          <th style="width: 65%;">Question</th>
-                          <th style="width: 25%;">Your Answer</th>
+                          <th style="width: 55%;">Question</th>
+                          <th style="width: 35%;">Your Answer</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="(question, i) in questions" :key="i" @click="showQuestionDetails(i)" role="button" class="question-row">
                           <td>{{ i + 1 }}</td>
-                          <td>{{ truncateQuestion(question.question, 60) }}</td>
+                          <td>{{ question.question }}</td>
                           <td :class="question.is_corrrect === 1 ? 'text-success fw-bold' : 'text-danger fw-bold'">
                             {{ formatAnswerWithoutPrefix(question) }}
                             <i v-if="question.is_corrrect === 1" class="bi bi-check-circle-fill text-success ms-1"></i>
@@ -240,7 +241,7 @@
           const answerText = choices[question.answer_input] || '';
   
           if (answerText) {
-            return this.truncateQuestion(answerText, 20);
+            return this.truncateQuestion(answerText, 40);
           }
   
           return 'Not answered';
@@ -268,7 +269,7 @@
   }
   
   .bg-success-light {
-    background-color: #d1e7dd !important;
+    background-color: #01f36638 !important;
     color: #0f5132;
   }
   
@@ -354,4 +355,42 @@
   .choice-option {
     transition: background-color 0.2s;
   }
+
+  .table {
+  border-collapse: separate;
+  border-spacing: 0 8px; /* Adds space between rows for modern appearance */
+  width: 100%;
+  background: transparent;
+}
+
+.table thead th {
+  background: linear-gradient(135deg, #1e1283, #5127b8);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  font-size: 14px;
+  border: none;
+}
+
+.table tbody tr {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative; /* Needed for pseudo-elements */
+  z-index: 0; /* Layer management for effects */
+}
+
+/* Apply hover effects to table rows instead */
+tbody tr {
+  transition: all 0.3s ease-in-out;
+  border-left: 3px solid transparent;
+}
+
+tbody tr:hover {
+  transform: translateY(-3px);
+  border-left: 3px solid #3085d6;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  background-color: rgba(240, 245, 255, 0.5);
+}
   </style>

@@ -1,0 +1,1 @@
+import{A as u}from"./config-Cif4XynF.js";import{$ as I,q as e,t as m}from"./index-BI8-wN6e.js";async function D({connection:a,table:n,columns:s}){return new Promise(async o=>{var i={connection:a,table:n,columns:s},t=u()+"util_query/insertGetID?"+I.param(i);e("queryInsertGetID:",t),await fetch(t).then(r=>r.json()).then(r=>(e("queryInsertGetID:",m(r)),o(r)))})}export{D as q};

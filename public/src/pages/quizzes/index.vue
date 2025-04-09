@@ -254,7 +254,8 @@ export default defineComponent({
       try {
         // Fetch random exercises for this category
         const response = await fetchRandomExcercises({ 
-          group_refid: exam?.header?.group_refid 
+          group_refid: exam?.header?.group_refid,
+          limit: jlconfig.quiz_limit // Add the required limit parameter
         });
 
         // Filter and limit questionnaires

@@ -67,6 +67,29 @@ import Swal from 'sweetalert2';
 
 declare const confetti: any;
 
+// Define types for the component
+interface ExerciseData {
+  header: {
+    name: string;
+    group_refid: string;
+  };
+  locked?: boolean;
+  passed?: boolean;
+  completed?: boolean;
+  attempt?: number;
+  score?: number;
+}
+
+interface ExamData {
+  categoryId: string;
+  score: number;
+}
+
+interface FetchRandomExcercisesProps {
+  group_refid: string;
+  limit: number;
+}
+
 export default defineComponent({
   components: { ElemProgressbar, ExamSpace, TopicList, SectionHeader, SectionFooter, Swiper, SwiperSlide },
   setup() {
@@ -95,7 +118,7 @@ export default defineComponent({
       list_sorting_locked: false,
       list_searching_locked: false,
       swiper: {} as any,
-      excercise: {} as any,
+      excercise: [] as ExerciseData[],
       reset: 0,
       category: {} as any,
       questionnaires: {} as any,
@@ -105,7 +128,7 @@ export default defineComponent({
     }
   },
   methods: {
-    async isArticleGroupDoneLocal() {
+    async isArticleGroupDoneLocal(): Promise<void> {
       await isArticleGroupDone(this.user?.user_refid, 'ARRAYS').then(async (check_array) => {
         this.list_arrays_locked = !check_array?.success;
       });
@@ -129,7 +152,7 @@ export default defineComponent({
       });
     },
 
-    async initExercises() {
+    async initExercises(): Promise<void> {
       this.loading = true;
       await queryURL({ url: "util_quiz/initExcercises?user_refid=" + this.user?.user_refid + "&limit=" + jlconfig.excercises_limit }).then(async (excercise) => {
         this.loading = false;
@@ -150,7 +173,7 @@ export default defineComponent({
       });
     },
 
-    isPassedAll() {
+    isPassedAll(): void {
       var passed = 0;
       for (let i = 0; i < this.excercise.length; i++) {
         if (this.excercise[i]['passed']) {
@@ -161,29 +184,27 @@ export default defineComponent({
       printDevLog("Over all status", { total: this.excercise.length, passed: passed });
 
       if (this.excercise.length === passed) {
-  if (!this.all_passed) { // Trigger once
-    this.all_passed = true;
-    this.startConfetti(); // 🎉 Start Confetti
-    Swal.fire({
-      title: "Congratulations!",
-      text: "You passed all the exercises, proceed to quiz!",
-      imageUrl: "/src/assets/img/new-passedall.png",
-       
-      confirmButtonText: "Go to Quiz"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.stopConfetti(); // 🔥 Stop Confetti if clicked
-        this.$router.replace('/quizzes');
-      }
-    });
-  }
-}
- else {
+        if (!this.all_passed) { // Trigger once
+          this.all_passed = true;
+          this.startConfetti(); // 🎉 Start Confetti
+          Swal.fire({
+            title: "Congratulations!",
+            text: "You passed all the exercises, proceed to quiz!",
+            imageUrl: "/src/assets/img/new-passedall.png",
+            confirmButtonText: "Go to Quiz"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.stopConfetti(); // 🔥 Stop Confetti if clicked
+              this.$router.replace('/quizzes');
+            }
+          });
+        }
+      } else {
         this.all_passed = false;
       }
     },
 
-    startConfetti() {
+    startConfetti(): void {
       if (this.confettiRunning) return;
       this.confettiRunning = true;
       const colors = ["#bb0000", "#161179", "#015551"];
@@ -216,32 +237,36 @@ export default defineComponent({
       frame();
     },
 
-    stopConfetti() {
+    stopConfetti(): void {
       this.confettiRunning = false;
     },
 
-    async viewExam(exam: any) {
+    async viewExam(exam: ExerciseData): Promise<void> {
       printDevLog("View Exam", exam);
       if (exam?.passed) {
-  Swal.fire({
-    title: "Completed",
-    text: "You've passed the exercises already",
-    icon: "info",
-     
-  });
-} else {
+        Swal.fire({
+          title: "Completed",
+          text: "You've passed the exercises already",
+          icon: "info",
+        });
+      } else {
         this.examVue = true;
         this.loading = true;
         this.category = toRaw(exam);
-        // Fixed fetchRandomExcercises call with proper type handling
-        await fetchRandomExcercises({ group_refid: exam?.header?.group_refid as any }).then(async (response) => {
+        
+        // Fixed fetchRandomExcercises call with proper parameters
+        const fetchParams: FetchRandomExcercisesProps = {
+          group_refid: exam?.header?.group_refid,
+          limit: jlconfig.excercises_limit
+        };
+        
+        await fetchRandomExcercises(fetchParams).then(async (response) => {
           response = response?.filter((exercise: any) => !exercise?.is_choices).slice(0, jlconfig.excercises_limit);
           if (response.length < jlconfig.excercises_limit) {
             Swal.fire({
               title: "Wait",
               text: "Questions in this exercise are not yet prepared.",
               icon: "info",
-               
             });
             this.loading = false;
           } else {
@@ -255,22 +280,22 @@ export default defineComponent({
       }
     },
 
-    onSwiper(swiper: any) {
+    onSwiper(swiper: any): void {
       this.swiper = swiper;
     },
 
-    onBack() {
+    onBack(): void {
       this.swiper.slideTo(0);
       this.examVue = false;
     },
 
-    async onPassed(data) {
+    async onPassed(data: ExamData): Promise<void> {
       this.swiper.slideTo(0);
       this.examVue = false;
       
       // Update the local exercise data without reloading everything
       if (data && data.categoryId) {
-        this.excercise = this.excercise.map((ex) => {
+        this.excercise = this.excercise.map((ex: ExerciseData) => {
           if (ex.header.group_refid === data.categoryId) {
             return {
               ...ex,
@@ -288,13 +313,13 @@ export default defineComponent({
       await this.initExercises();
     },
 
-    async onFail(data) {
+    async onFail(data: ExamData): Promise<void> {
       this.swiper.slideTo(0);
       this.examVue = false;
       
       // Update the local exercise data without reloading everything
       if (data && data.categoryId) {
-        this.excercise = this.excercise.map((ex) => {
+        this.excercise = this.excercise.map((ex: ExerciseData) => {
           if (ex.header.group_refid === data.categoryId) {
             return {
               ...ex,
@@ -312,7 +337,7 @@ export default defineComponent({
       await this.initExercises();
     },
 
-    async proceedToQuiz() {
+    async proceedToQuiz(): Promise<void> {
       this.stopConfetti();
       if (this.all_passed) {
         this.$router.replace('/quizzes');
@@ -336,14 +361,12 @@ export default defineComponent({
     this.$router.push({ path: this.$route.path, query: {} });
   },
 
-  // Fixed beforeRouteLeave - properly typed parameters
   beforeRouteLeave(to: any, from: any, next: any) {
     this.stopConfetti(); // Stop confetti if user navigates away
     next();
   }
 });
 </script>
-
 
 <style scoped>
 .btn-outline-primary {

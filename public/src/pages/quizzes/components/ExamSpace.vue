@@ -94,14 +94,15 @@
 
     <!-- Quiz Results View -->
     <quiz-result-preview 
-      v-if="showResults"
-      :category="category"
-      :questions="list"
-      :score="score"
-      :timeUsed="timeDisplay?.formatted || '00:00:00'"
-      @back="onResultsBack"
-      @retry="onResultsRetry"
-    />
+    v-if="showResults"
+    :category="category"
+    :questions="list"
+    :score="score"
+    :passed="passed === 1"
+    :timeUsed="timeDisplay?.formatted || '00:00:00'"
+    @back="onResultsBack"
+    @retry="onResultsRetry"
+  />
   </div>
 </template>
 

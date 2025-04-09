@@ -12,12 +12,12 @@
           <div class="card-body">
             <div class="progress mb-3" style="height: 30px;">
               <div class="progress-bar bg-success" role="progressbar"
-                   v-bind:style="{ width: (score / questions.length * 100) + '%' }"
-                   :aria-valuenow="score / questions.length * 100" :aria-valuemin="0" aria-valuemax="100">
+                   :style="{ width: (score / questions.length * 100) + '%' }"
+                   :aria-valuenow="score / questions.length * 100" aria-valuemin="0" aria-valuemax="100">
                 {{ Math.round(score / questions.length * 100) }}%
               </div>
             </div>
-            <div v-if="passed" class="alert alert-success mb-3">
+            <div v-if="isPassed" class="alert alert-success mb-3">
               <i class="bi bi-check-circle-fill me-2"></i> Congratulations! You passed the quiz.
             </div>
             <div v-else class="alert alert-danger mb-3">
@@ -29,7 +29,7 @@
               <div>Remaining Time: {{ timeUsed }}</div>
             </div>
 
-            <div class="">
+            <div>
               <div class="card-header d-flex justify-content-between align-items-center">
                 <strong>Questions Overview</strong>
                 <p>Select list to view</p>
@@ -38,20 +38,18 @@
                 <div class="table-responsive">
                   <table class="table table-hover table-striped mb-0">
                     <thead>
-                      <tr class="">
+                      <tr>
                         <th style="width: 10%;">#</th>
                         <th style="width: 55%;">Question</th>
                         <th style="width: 35%;">Your Answer</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(question, i) in questions" :key="i" @click="showQuestionDetails(i)" role="button" class="question-row">
+                      <tr v-for="(question, i) in typedQuestions" :key="i" @click="showQuestionDetails(i)" role="button" class="question-row">
                         <td>{{ i + 1 }}</td>
                         <td>{{ truncateQuestion(question.question, 86) }}</td>
-                        
                         <td :class="question.is_correct === 1 ? 'text-success fw-bold' : 'text-danger fw-bold'">
                           {{ formatAnswerWithoutPrefix(question) }}
-
                         </td>
                       </tr>
                     </tbody>
@@ -75,10 +73,9 @@
           <button type="button" class="btn-close" @click="closeQuestionModal"></button>
         </div>
         <div class="question-modal-body">
-          <p class="mb-3">{{ selectedQuestion.question }}</p>
-
-          <div v-if="!!selectedQuestion.is_choices">
-            <div v-for="(choice, letter, index) in choices" :key="letter"
+          <p class="mb-3">{{ selectedQuestion?.question }}</p>
+          <div v-if="!!selectedQuestion?.is_choices">
+            <div v-for="(choice, letter) in choices" :key="letter"
                  class="choice-option p-3 mb-2 rounded"
                  :class="getChoiceClass(letter)">
               {{ choice }}
@@ -89,14 +86,14 @@
               <span class="input-group-text">Your Answer</span>
               <input type="text" class="form-control"
                      :class="{
-                       'bg-success-dark text-white': selectedQuestion.is_correct === 1,
-                       'bg-danger text-white': selectedQuestion.is_correct === 0
+                       'bg-success-dark text-white': selectedQuestion?.is_correct === 1,
+                       'bg-danger text-white': selectedQuestion?.is_correct === 0
                      }"
-                     :value="selectedQuestion.answer_input" disabled>
+                     :value="selectedQuestion?.answer_input" disabled>
             </div>
-            <div v-if="selectedQuestion.is_correct === 0" class="input-group mb-3">
+            <div v-if="selectedQuestion?.is_correct === 0" class="input-group mb-3">
               <span class="input-group-text">Correct Answer</span>
-              <input type="text" class="form-control bg-success-light" :value="selectedQuestion.answer" disabled>
+              <input type="text" class="form-control bg-success-light" :value="selectedQuestion?.answer" disabled>
             </div>
           </div>
         </div>
@@ -109,15 +106,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import Swal from 'sweetalert2';
+
+// Define the interface for a question
+interface Question {
+  question: string;
+  is_correct: number;
+  answer_input: string;
+  answer: string;
+  is_choices: boolean;
+  choice_a?: string;
+  choice_b?: string;
+  choice_c?: string;
+  choice_d?: string;
+}
+
+// Define the interface for category - make it more generic
+interface Category {
+  id?: number;
+  name?: string;
+  [key: string]: any; // Allow any additional properties
+}
 
 export default defineComponent({
   name: "QuizResultPreview",
   emits: ['back', 'retry'],
   props: {
     category: {
-      type: Object,
+      type: Object as () => Category,
       required: true
     },
     questions: {
@@ -128,8 +145,9 @@ export default defineComponent({
       type: Number,
       required: true
     },
+    // Change "passed" to be a Boolean flag.
     passed: {
-      type: Number,
+      type: Boolean,
       required: true
     },
     timeUsed: {
@@ -141,9 +159,18 @@ export default defineComponent({
   data() {
     return {
       selectedQuestionIndex: 0,
-      selectedQuestion: null as any,
+      selectedQuestion: null as Question | null,
       showQuestionModal: false,
       choices: {} as Record<string, string>
+    }
+  },
+  computed: {
+    typedQuestions(): Question[] {
+      return this.questions as Question[];
+    },
+    isPassed(): boolean {
+      // Now that `passed` is a Boolean, simply return its value
+      return this.passed;
     }
   },
   methods: {
@@ -166,28 +193,24 @@ export default defineComponent({
     },
     showQuestionDetails(index: number) {
       this.selectedQuestionIndex = index;
-      this.selectedQuestion = this.questions[index];
+      this.selectedQuestion = (this.questions as Question[])[index];
 
-      // Prepare choices for the selected question
+      // Prepare choices for the selected question if applicable
       if (this.selectedQuestion && this.selectedQuestion.is_choices) {
         this.choices = {
-          'a': this.selectedQuestion.choice_a,
-          'b': this.selectedQuestion.choice_b,
-          'c': this.selectedQuestion.choice_c,
-          'd': this.selectedQuestion.choice_d
+          'a': this.selectedQuestion.choice_a || '',
+          'b': this.selectedQuestion.choice_b || '',
+          'c': this.selectedQuestion.choice_c || '',
+          'd': this.selectedQuestion.choice_d || ''
         };
       }
 
-      // Show our custom modal
+      // Show the modal and disable body scrolling
       this.showQuestionModal = true;
-
-      // Prevent scrolling on the body when modal is open
       document.body.style.overflow = 'hidden';
     },
     closeQuestionModal() {
       this.showQuestionModal = false;
-
-      // Re-enable scrolling on the body
       document.body.style.overflow = '';
     },
     getChoiceClass(letter: string) {
@@ -199,7 +222,7 @@ export default defineComponent({
         'bg-danger': this.selectedQuestion.is_correct === 0 &&
                      this.selectedQuestion.answer_input === letter,
         'bg-success-light': this.selectedQuestion.is_correct === 0 &&
-                            this.selectedQuestion.answer.toLowerCase() === letter
+                           this.selectedQuestion.answer.toLowerCase() === letter
       };
     },
     truncateQuestion(text: string, maxLength: number): string {
@@ -208,44 +231,40 @@ export default defineComponent({
       }
       return text || '';
     },
-    formatAnswerWithoutPrefix(question: any): string {
+    formatAnswerWithoutPrefix(question: Question): string {
       if (question.is_choices) {
         const choices: Record<string, string> = {
-          'a': question.choice_a,
-          'b': question.choice_b,
-          'c': question.choice_c,
-          'd': question.choice_d
+          'a': question.choice_a || '',
+          'b': question.choice_b || '',
+          'c': question.choice_c || '',
+          'd': question.choice_d || ''
         };
 
-        // Return only the answer text without any prefix
         const answerText = choices[question.answer_input] || '';
-
         if (answerText) {
           return this.truncateQuestion(answerText, 55);
         }
-
         return 'Not answered';
       } else {
-        // For text input questions, just return the answer text
         return question.answer_input || 'Not answered';
       }
     }
   },
   beforeUnmount() {
-    // Make sure to re-enable scrolling if component is unmounted with modal open
+    // Re-enable scrolling if the modal was open
     document.body.style.overflow = '';
   }
 });
 </script>
 
 <style scoped>
-
+/* (Your styles remain unchanged) */
 .container {
   max-width: 100%;
 }
 
 .custom-mt {
-  margin-top: -50px !important; /* Adjust the value as needed */
+  margin-top: -50px !important;
 }
 
 .bg-success-dark {
@@ -278,7 +297,7 @@ export default defineComponent({
   left: 0;
   right: 0;
   bottom: 0;
-  backdrop-filter: blur(5px); /* Apply the blur effect */
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,7 +305,6 @@ export default defineComponent({
 }
 
 .question-modal-content {
-  display: sticky;
   background-color: white;
   border-radius: 4px;
   max-width: 800px;
@@ -321,7 +339,7 @@ export default defineComponent({
 
 .table {
   border-collapse: separate;
-  border-spacing: 0 8px; /* Adds space between rows for modern appearance */
+  border-spacing: 0 8px;
   width: 100%;
   background: transparent;
 }
@@ -340,11 +358,10 @@ export default defineComponent({
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
-  position: relative; /* Needed for pseudo-elements */
-  z-index: 0; /* Layer management for effects */
+  position: relative;
+  z-index: 0;
 }
 
-/* Apply hover effects to table rows instead */
 tbody tr {
   transition: all 0.3s ease-in-out;
   border-left: 3px solid transparent;

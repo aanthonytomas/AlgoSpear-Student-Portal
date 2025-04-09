@@ -45,7 +45,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(question, i) in questions" :key="i" @click="showQuestionDetails(i)" role="button" class="question-row">
+                        <tr v-for="(question, i) in typedQuestions" :key="i" @click="showQuestionDetails(i)" role="button" class="question-row">
                           <td class="text-center">{{ i + 1 }}</td>
                           <td>{{ question.question }}</td>
                           <td :class="question.is_corrrect === 1 ? 'text-success fw-bold' : 'text-danger fw-bold'">
@@ -73,9 +73,9 @@
             <button type="button" class="btn-close" @click="closeQuestionModal"></button>
           </div>
           <div class="question-modal-body">
-            <p class="mb-3">{{ selectedQuestion.question }}</p>
+            <p class="mb-3">{{ selectedQuestion?.question }}</p>
   
-            <div v-if="!!selectedQuestion.is_choices">
+            <div v-if="!!selectedQuestion?.is_choices">
               <div v-for="(choice, letter, index) in choices" :key="letter"
                    class="choice-option p-3 mb-2 rounded"
                    :class="getChoiceClass(letter)">
@@ -87,14 +87,14 @@
                 <span class="input-group-text">Your Answer</span>
                 <input type="text" class="form-control"
                        :class="{
-                         'bg-success-dark text-white': selectedQuestion.is_corrrect === 1,
-                         'bg-danger text-white': selectedQuestion.is_corrrect === 0
+                         'bg-success-dark text-white': selectedQuestion?.is_corrrect === 1,
+                         'bg-danger text-white': selectedQuestion?.is_corrrect === 0
                        }"
-                       :value="selectedQuestion.answer_input" disabled>
+                       :value="selectedQuestion?.answer_input" disabled>
               </div>
-              <div v-if="selectedQuestion.is_corrrect === 0" class="input-group mb-3">
+              <div v-if="selectedQuestion?.is_corrrect === 0" class="input-group mb-3">
                 <span class="input-group-text">Correct Answer</span>
-                <input type="text" class="form-control bg-success-light" :value="selectedQuestion.answer" disabled>
+                <input type="text" class="form-control bg-success-light" :value="selectedQuestion?.answer" disabled>
               </div>
             </div>
           </div>
@@ -107,15 +107,39 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, computed } from 'vue';
   import Swal from 'sweetalert2';
+  
+  // Define the interface for the question object
+  interface Question {
+    question: string;
+    is_corrrect: number;
+    answer_input: string;
+    answer: string;
+    is_choices: boolean;
+    choice_a?: string;
+    choice_b?: string;
+    choice_c?: string;
+    choice_d?: string;
+  }
+  
+  // Define the interface for category
+  interface Category {
+    id?: number;
+    name?: string;
+    group_refid?: string | number;
+    header?: {
+      name: string;
+      group_refid: string;
+    };
+  }
   
   export default defineComponent({
     name: "ExercisePreviewResult",
     emits: ['back', 'retry'],
     props: {
       category: {
-        type: Object,
+        type: Object as () => Category,
         required: true
       },
       questions: {
@@ -127,7 +151,7 @@
         required: true
       },
       passed: {
-        type: Number,
+        type: Boolean,
         required: true
       },
       timeUsed: {
@@ -139,10 +163,15 @@
     data() {
       return {
         selectedQuestionIndex: 0,
-        selectedQuestion: null as any,
+        selectedQuestion: null as Question | null,
         showQuestionModal: false,
         choices: {} as Record<string, string>,
         isSticky: false
+      }
+    },
+    computed: {
+      typedQuestions(): Question[] {
+        return this.questions as Question[];
       }
     },
     mounted() {
@@ -184,15 +213,15 @@
       },
       showQuestionDetails(index: number) {
         this.selectedQuestionIndex = index;
-        this.selectedQuestion = this.questions[index];
+        this.selectedQuestion = (this.questions as Question[])[index];
   
         // Prepare choices for the selected question
         if (this.selectedQuestion && this.selectedQuestion.is_choices) {
           this.choices = {
-            'a': this.selectedQuestion.choice_a,
-            'b': this.selectedQuestion.choice_b,
-            'c': this.selectedQuestion.choice_c,
-            'd': this.selectedQuestion.choice_d
+            'a': this.selectedQuestion.choice_a || '',
+            'b': this.selectedQuestion.choice_b || '',
+            'c': this.selectedQuestion.choice_c || '',
+            'd': this.selectedQuestion.choice_d || ''
           };
         }
   
@@ -226,13 +255,13 @@
         }
         return text || '';
       },
-      formatAnswerWithoutPrefix(question: any): string {
+      formatAnswerWithoutPrefix(question: Question): string {
         if (question.is_choices) {
           const choices: Record<string, string> = {
-            'a': question.choice_a,
-            'b': question.choice_b,
-            'c': question.choice_c,
-            'd': question.choice_d
+            'a': question.choice_a || '',
+            'b': question.choice_b || '',
+            'c': question.choice_c || '',
+            'd': question.choice_d || ''
           };
   
           // Return only the answer text without any prefix
@@ -251,7 +280,7 @@
     }
   });
   </script>
-  
+    
   <style scoped>
   .container {
     max-width: 100%;
@@ -320,7 +349,6 @@
   }
   
   .question-modal-content {
-
     background-color: white;
     border-radius: 4px;
     max-width: 800px;
@@ -353,42 +381,42 @@
   .choice-option {
     transition: background-color 0.2s;
   }
-
+  
   .table {
   border-collapse: separate;
   border-spacing: 0 8px; /* Adds space between rows for modern appearance */
   width: 100%;
   background: transparent;
-}
-
-.table thead th {
+  }
+  
+  .table thead th {
   background: linear-gradient(135deg, #1e1283, #5127b8);
   color: white;
   text-align: center;
   padding: 12px;
   font-size: 14px;
   border: none;
-}
-
-.table tbody tr {
+  }
+  
+  .table tbody tr {
   background: white;
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative; /* Needed for pseudo-elements */
   z-index: 0; /* Layer management for effects */
-}
-
-/* Apply hover effects to table rows instead */
-tbody tr {
+  }
+  
+  /* Apply hover effects to table rows instead */
+  tbody tr {
   transition: all 0.3s ease-in-out;
   border-left: 3px solid transparent;
-}
-
-tbody tr:hover {
+  }
+  
+  tbody tr:hover {
   transform: translateY(-3px);
   border-left: 3px solid #3085d6;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
   background-color: rgba(240, 245, 255, 0.5);
-}
+  }
   </style>

@@ -99,7 +99,7 @@
       :category="category"
       :questions="list"
       :score="score"
-      :passed="passed"
+      :passed="!!passed"
       :timeUsed="timeDisplay?.formatted || '00:00:00'"
       @back="onResultsBack"
       @retry="onResultsRetry"
@@ -116,8 +116,37 @@ import Swal from 'sweetalert2';
 import { useStore } from 'vuex';
 import ExercisePreviewResult from './ExercisePreviewResult.vue';
 
+// Define interfaces for better TypeScript support
+interface Question {
+  question: string;
+  answer: string;
+  answer_input: string;
+  is_choices?: boolean;
+  choice_a?: string;
+  choice_b?: string;
+  choice_c?: string;
+  choice_d?: string;
+  is_corrrect?: number;
+}
+
+interface Category {
+  header: {
+    name: string;
+    group_refid: string;
+  };
+}
+
+interface TimeDisplay {
+  formatted?: string;
+  percentage?: {
+    used: number;
+  };
+  seconds?: number;
+  intervalID?: number;
+}
+
 export default defineComponent({
-  name: "TopicList",
+  name: "ExamSpace",
   emits: ['back', 'passed', 'fail'],
   props: {
     reset: {
@@ -125,12 +154,12 @@ export default defineComponent({
       type: Number
     },
     category: {
-      default: {},
-      type: Object
+      default: {} as Category,
+      type: Object as () => Category
     },
     questionnaires: {
-      default: {},
-      type: Object
+      default: [] as Question[],
+      type: Object as () => Question[]
     }
   },
   components: { Swiper, SwiperSlide, ExercisePreviewResult },
@@ -145,10 +174,10 @@ export default defineComponent({
       },
       user: {} as any,
       swiper: {} as any,
-      list: [] as any,
+      list: [] as Question[],
       score: 0,
       passed: 0,
-      timeDisplay: {} as any,
+      timeDisplay: {} as TimeDisplay,
       exercise_duration: 0,
       backButton: false,
       stopTimer: null as null | (() => void),
@@ -160,12 +189,13 @@ export default defineComponent({
     }
   },
   methods: {
-    onPrevious() {
+    onPrevious(): void {
       if (this.swiper.activeIndex > 0) {
         this.swiper.slidePrev();
       }
     },
-    async onBack(){
+    
+    async onBack(): Promise<void> {
       // Skip confirmation dialog if timer is already up
       if (this.isTimesUp) {
         if (this.timeDisplay?.intervalID) {
@@ -199,11 +229,12 @@ export default defineComponent({
         }
       });
     },
-    async startTimer() {
-      this.stopTimer = timerStartTimer(async (newTime) => {
+    
+    async startTimer(): Promise<void> {
+      this.stopTimer = timerStartTimer(async (newTime: TimeDisplay) => {
         printDevLog("Reading Time:", toRaw(newTime));
         this.timeDisplay = newTime;
-        if (newTime?.seconds == 0) {
+        if (newTime?.seconds === 0) {
           console.log("time is up");
           this.isTimesUp = true; // Set the flag when time is up
           
@@ -230,7 +261,8 @@ export default defineComponent({
         }
       }, this.exercise_duration);
     },
-    async onSubmitAnswer(index: number) {
+    
+    async onSubmitAnswer(index: number): Promise<void> {
       if(!this.list[index]['answer_input']) {
         this.$toast.warning('Please provide your answer.');
       }
@@ -294,7 +326,8 @@ export default defineComponent({
         }
       }
     },
-    async onSaveExcercises() {
+    
+    async onSaveExcercises(): Promise<void> {
       await queryInsertGetID({
         connection: SystemConnections()['CONN_NPM_LMS'],
         table: 'questionnaire_category_done',
@@ -307,14 +340,17 @@ export default defineComponent({
         }
       });
     },
-    onSwiper(swiper: any) {
+    
+    onSwiper(swiper: any): void {
       this.swiper = swiper;
     },
-    onResultsBack() {
+    
+    onResultsBack(): void {
       // Return to exercise list
       this.$emit('back');
     },
-    onResultsRetry() {
+    
+    onResultsRetry(): void {
       // Reset and retry the exercise
       this.showResults = false;
       this.score = 0;
@@ -324,7 +360,7 @@ export default defineComponent({
       this.canNavigatePrevious = false;
       
       // Reset all answers
-      this.list.forEach((question: any) => {
+      this.list.forEach((question: Question) => {
         question.answer_input = '';
         question.is_corrrect = 0;
       });
@@ -334,18 +370,18 @@ export default defineComponent({
     }
   },
   watch: {
-    timeDisplay: function(value, prevVal){
-      if(value?.intervalID !== prevVal?.intervalID){
+    timeDisplay: function(value: TimeDisplay, prevVal: TimeDisplay) {
+      if(value?.intervalID !== prevVal?.intervalID) {
         this.store.commit('addIntervalId', value?.intervalID);
         console.log("added interval id");
       }
     },
-    reset: async function () {
+    reset: async function() {
       if(this.reset > 0) {
         var user = await lsGetUser() as any;
         if(user) {
           this.user = user;
-          this.list = this.questionnaires;
+          this.list = this.questionnaires as Question[];
           this.score = 0;
           this.passed = 0;
           this.isTimesUp = false; // Reset the times up flag when starting a new exercise
@@ -374,14 +410,14 @@ export default defineComponent({
       }
     }
   },
-  created(){
+  created() {
     this.exercise_duration = jlconfig.exercise_time * 60;
     this.isTimesUp = false; // Initialize the flag when component is created
     this.answeredQuestions = []; // Initialize answered questions tracking
     this.canNavigatePrevious = false; // Initialize Previous button as disabled
     this.showResults = false; // Start in exercise taking mode
   },
-  beforeUnmount(){
+  beforeUnmount() {
     console.log("Component Destroyed!");
     // Make sure to clear interval if component is destroyed
     if (this.timeDisplay?.intervalID) {

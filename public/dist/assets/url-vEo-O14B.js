@@ -1,0 +1,1 @@
+import{A as e}from"./config-Cif4XynF.js";import{q as n,t as s}from"./index-DvlkE_cf.js";async function u({url:o}){return new Promise(async a=>{var r=e()+o;n("URL:",r),await fetch(r).then(t=>t.json()).then(t=>(n("Response:",s(t)),a(t)))})}export{u as q};

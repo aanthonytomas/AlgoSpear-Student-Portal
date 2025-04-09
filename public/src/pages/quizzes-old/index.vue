@@ -69,8 +69,7 @@
         Swal.fire({
           title: "Confirmation",
           text: "Start exercises over again?",
-          imageUrl: "/src/assets/img/new-ques.png",
-           
+          icon: "warning",           
           showCancelButton: true,
           confirmButtonText: "Start Again"
         }).then( async (result) => {

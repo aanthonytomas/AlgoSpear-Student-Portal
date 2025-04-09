@@ -74,7 +74,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
+              icon: "warning",
                
             });
         }else{

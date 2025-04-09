@@ -132,8 +132,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
-               
+              icon: "warning",               
             });
         }
       },
@@ -142,16 +141,14 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
-               
+              icon: "warning",               
             });
         }else if(this.fundamentalsOfPrgramming !== 100){
           Swal.fire({
               title: "Locked Content",
               html: "Please complete Fundamentals of Programming first",
-              imageUrl: "/src/assets/img/new-locked.png",
-               
-            });
+              icon: "warning",
+        });
         }else{
           this.loading.data_struc = true;
           await isFundamentalDone(this.user?.user_refid).then( async (response) => {
@@ -175,14 +172,14 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
+              icon: "warning",
                
             });
         }else if(this.fundamentalsOfPrgramming !== 100){
           Swal.fire({
               title: "Locked Content",
               html: "Please complete Fundamentals of Programming first",
-              imageUrl: "/src/assets/img/new-locked.png",
+              icon: "warning",
                
             });
         }else{

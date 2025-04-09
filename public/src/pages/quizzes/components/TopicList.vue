@@ -128,8 +128,7 @@ export default defineComponent({
       Swal.fire({
         title: "Congratulations!",
         text: allPassed ? "You've passed the quiz" : "You've passed this quiz, take another quiz",
-        imageUrl: "/src/assets/img/new-congrats.png",
-         
+        icon: allPassed ? "success" : "info",         
       });
     },
     
@@ -137,8 +136,7 @@ export default defineComponent({
       Swal.fire({
         title: "Sign In Required",
         text: "You need to sign in to start a quiz",
-        imageUrl: "/src/assets/img/new-signin.png",
-         
+        icon: "warning",         
       }).then(async () => {
         this.$router.replace('/login');
       });

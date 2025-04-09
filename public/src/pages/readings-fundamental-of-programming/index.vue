@@ -152,8 +152,7 @@
         Swal.fire({
           title: 'Congratulations!',
           text: 'You\'ve unlocked the \'Data Structures\' and \'Algorithms\' topics. Ready to dive in and explore further?',
-          imageUrl: "/src/assets/img/new-next.png",
-           
+          icon: 'success',           
           showCancelButton: true,
         //  confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',

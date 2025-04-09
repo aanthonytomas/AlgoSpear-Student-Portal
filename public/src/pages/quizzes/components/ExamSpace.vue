@@ -4,12 +4,12 @@
     <div class="row">
       <div class="col-sm-0 col-lg-3"></div>
       <div class="col-sm-12 col-lg-6">
-        <!-- Timer Section (Unchanged) -->
+        <!-- Improved timer that aligns with card -->
         <div class=" mb-3 mt-2">
           <div class=" p-3">
             <div class="d-flex align-items-center">
               <div><i class="bi bi-alarm fs-3 text-primary"></i></div>
-              <div class="flex-grow-1 ms-3">
+              <div class="flex-grow-1">
                 <div class="d-flex justify-content-between align-items-center">
                   <p class="p-0 m-0 fw-bold">
                     {{ timeDisplay?.formatted ? timeDisplay?.formatted : '00:00:00' }}
@@ -68,23 +68,7 @@
                   <input v-model="question.answer_input" type="text" class="form-control">
                 </div>
               </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="d-flex">
-                  <button 
-                    class="btn btn-secondary me-2" 
-                    @click="onPreviousQuestion" 
-                    :disabled="currentQuestionIndex === 0"
-                  >
-                    Previous
-                  </button>
-                  <button 
-                    class="btn btn-secondary me-2" 
-                    @click="onNextQuestion" 
-                    :disabled="currentQuestionIndex === list.length - 1"
-                  >
-                    Next
-                  </button>
-                </div>
+              <div class="card-footer d-flex justify-content-end">
                 <button class="btn btn-primary w-50" @click="onSubmitAnswer(i)" :disabled="loading.btn_submit">
                   <span v-if="loading.btn_submit">
                     <span class="spinner-border spinner-border-sm me-2" role="status"></span>
@@ -103,7 +87,6 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import { lsGetUser, printDevLog, queryInsertGetID, SystemConnections, timerStartTimer } from '@/uikit-api';
 import { defineComponent, toRaw } from 'vue';
@@ -149,8 +132,7 @@ export default defineComponent({
       backButton: false,
       stopTimer: null as null | (() => void),
       isUserTryingToLeave: false,
-      isTimesUp: false,  // Flag to track if time is up
-      currentQuestionIndex: 0
+      isTimesUp: false  // Flag to track if time is up
     }
   },
   methods: {
@@ -171,8 +153,7 @@ export default defineComponent({
       Swal.fire({
         title: "Are you sure?",
         text: "You will lose all your progress, are you sure you want to leave?",
-        imageUrl: "/src/assets/img/new-question2.png",
-         
+        icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, cancel",
         cancelButtonText: "No, continue "
@@ -210,9 +191,7 @@ export default defineComponent({
           Swal.fire({
             title: "Time's up",
             text: "Your quiz time has ended.",
-            imageUrl: "/src/assets/img/new-timesup.png",
-             
-            timer: 3000,
+            icon: "info"
           }).then(async () => {
             await this.onSaveExcercises().then(async () => {
               this.loading.btn_submit = false;
@@ -220,17 +199,15 @@ export default defineComponent({
                 Swal.fire({
                   title: "Congratulations",
                   text: "You passed the quiz with score of " + this.score + " out of " + jlconfig.quiz_limit + ".",
-                  imageUrl: "/src/assets/img/new-passed.png",
-                   
+                  icon: "success"
                 }).then(() => {
                   this.$emit('passed');
                 });
               } else {
                 Swal.fire({
-                  title: "You failed",
-                  text: "Score are " + this.score + " out of " + jlconfig.quiz_limit + ".",
-                  imageUrl: "/src/assets/img/new-failed.png",
-                   
+                  title: "You fail",
+                  text: "You fail to pass with score of " + this.score + " out of " + jlconfig.quiz_limit + ".",
+                  icon: "error"
                 }).then(() => {
                   this.$emit('fail');
                 });
@@ -240,23 +217,6 @@ export default defineComponent({
         }
       }, this.exercise_duration);
     },
-    
-    // New method for previous question navigation
-    onPreviousQuestion() {
-      if (this.currentQuestionIndex > 0) {
-        this.currentQuestionIndex--;
-        this.swiper.slidePrev();
-      }
-    },
-
-    // New method for next question navigation
-    onNextQuestion() {
-      if (this.currentQuestionIndex < this.list.length - 1) {
-        this.currentQuestionIndex++;
-        this.swiper.slideNext();
-      }
-    },
-
     async onSubmitAnswer(index: number) {
       if(!this.list[index]['answer_input']) {
         this.$toast.warning('Please provide your answer.');
@@ -298,10 +258,9 @@ export default defineComponent({
             }
             else {
               Swal.fire({
-                title: "You failed",
-                text: "Score are " + this.score + " out of " + jlconfig.quiz_limit + ".",
-                imageUrl: "/src/assets/img/new-failed.png",
-                 
+                title: "You fail",
+                text: "You fail to pass with score of " + this.score + " out of " + jlconfig.quiz_limit + ".",
+                icon: "error"
               }).then(async () => {
                 this.$emit('fail');
               });
@@ -346,7 +305,6 @@ export default defineComponent({
           this.score = 0;
           this.passed = 0;
           this.isTimesUp = false; // Reset the times up flag when starting a new quiz
-          this.currentQuestionIndex = 0; // Reset current question index
           this.swiper.slideTo(0);
           printDevLog("Props:", toRaw(this.$props));
           printDevLog("Data:", toRaw(this.$data));
@@ -363,8 +321,7 @@ export default defineComponent({
           Swal.fire({
             title: "Sign In Required",
             text: "You need to sign in to start a quiz",
-            imageUrl: "/src/assets/img/new-signin.png",
-             
+            icon: "info"
           });
         }
       }

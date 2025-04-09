@@ -60,7 +60,7 @@ import Swal from 'sweetalert2';
               Swal.fire({
                 title: "Completed",
                 text: "You have completed the allocated time",
-                imageUrl: "/src/assets/img/new-completed.png",
+                icon: "success",
                  
               });
             });

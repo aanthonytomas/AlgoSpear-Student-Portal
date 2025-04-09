@@ -63,7 +63,7 @@
             Swal.fire({
               title: "Locked Topic",
               text: "You did not read all the materials of this topic",
-              imageUrl: "/src/assets/img/new-locked.png",
+              icon: "warning",
                
             });
           }else{
@@ -73,7 +73,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
+              icon: "warning",
                
             });
         }

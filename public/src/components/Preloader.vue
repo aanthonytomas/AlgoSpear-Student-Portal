@@ -192,10 +192,10 @@ export default {
       structureInterval: null,
       
       // Duration for each structure in milliseconds
-      structureDuration: 1000,
+      structureDuration: 700,
       
       // Total loading time in milliseconds
-      totalLoadTime: 6900 // ~7 seconds total
+      totalLoadTime: 4600 // ~7 seconds total
     }
   },
   mounted() {

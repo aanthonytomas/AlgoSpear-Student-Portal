@@ -97,7 +97,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
+              icon: "warning",
                
             });
         }else{
@@ -109,7 +109,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
+              icon: "warning",
                
             });
         } else {
@@ -119,7 +119,7 @@
             Swal.fire({
               title: "Locked Content",
               html: "Please complete Sorting Algorithms.",
-              imageUrl: "/src/assets/img/new-locked.png",
+              icon: "warning",
                
             });
           }

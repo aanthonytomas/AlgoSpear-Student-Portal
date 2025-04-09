@@ -146,7 +146,7 @@ export default defineComponent({
       Swal.fire({
         title: "Sign Out",
         text: "Confirm your sign out action",
-        imageUrl: "/src/assets/img/new-signout.png",
+        icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Logout",
       }).then(async (result) => {

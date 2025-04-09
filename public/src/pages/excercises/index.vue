@@ -226,7 +226,7 @@ export default defineComponent({
   Swal.fire({
     title: "Completed",
     text: "You've passed the exercises already",
-    imageUrl: "/src/assets/img/new-completed.png",
+    icon: "info",
      
   });
 } else {
@@ -240,7 +240,7 @@ export default defineComponent({
             Swal.fire({
               title: "Wait",
               text: "Questions in this exercise are not yet prepared.",
-              imageUrl: "/src/assets/img/new-wait.png",
+              icon: "info",
                
             });
             this.loading = false;

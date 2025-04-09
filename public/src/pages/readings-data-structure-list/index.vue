@@ -188,7 +188,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
+              icon: "warning",
                
             });
         }else{
@@ -200,7 +200,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
+              icon: "warning",  
                
             });
         } else {
@@ -210,8 +210,7 @@
             Swal.fire({
               title: "Locked Content",
               html: "You need to complete Arrays first before accessing Linked Lists.",
-              imageUrl: "/src/assets/img/new-locked.png",
-               
+              icon: "warning",               
             });
           }
         }
@@ -221,8 +220,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
-               
+              icon: "warning",               
             });
         } else {
           await isArticleGroupDone(this.user?.user_refid, 'LINKED_LIST').then((check) => {
@@ -232,8 +230,7 @@
               Swal.fire({
                 title: "Locked Content",
                 html: check?.message || "You need to complete Linked Lists first before accessing Stacks.",
-                imageUrl: "/src/assets/img/new-locked.png",
-                 
+                icon: "warning",                 
               });
             }
           });
@@ -244,8 +241,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
-               
+              icon: "warning",               
             });
         } else {
           await isArticleGroupDone(this.user?.user_refid, 'STACKS').then((check) => {
@@ -255,8 +251,7 @@
               Swal.fire({
                 title: "Locked Content",
                 html: check?.message || "You need to complete Stacks first before accessing Queues.",
-                imageUrl: "/src/assets/img/new-locked.png",
-                 
+                icon: "warning",                 
               });
             }
           });
@@ -267,8 +262,7 @@
           Swal.fire({
               title: "Sign In Required",
               html: "Please Login first",
-              imageUrl: "/src/assets/img/new-signin.png",
-               
+              icon: "warning",               
             });
         } else {
           await isArticleGroupDone(this.user?.user_refid, 'QUEUES').then((check) => {
@@ -278,8 +272,7 @@
               Swal.fire({
                 title: "Locked Content",
                 html: check?.message || "You need to complete Queues first before accessing Graphs.",
-                imageUrl: "/src/assets/img/new-locked.png",
-                 
+                icon: "warning",                 
               });
             }
           });

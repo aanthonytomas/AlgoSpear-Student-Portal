@@ -398,8 +398,7 @@
     text: text,
     showCancelButton: true,
     cancelButtonColor: '#d33',
-    imageUrl: "/src/assets/img/new-completed.png",
-     
+    icon: 'success',     
     confirmButtonText: 'Yes, take me to exercises',
     cancelButtonText: 'No, continue reading'
   }).then((result) => {

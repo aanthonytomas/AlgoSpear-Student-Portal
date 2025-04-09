@@ -266,8 +266,7 @@ export default defineComponent({
           Swal.fire({
             title: "Wait",
             text: "Questions in this quiz are not yet prepared.",
-            imageUrl: "/src/assets/img/new-question.png",
-             
+            icon: "warning",               
           });
           this.loading = false;
           return;

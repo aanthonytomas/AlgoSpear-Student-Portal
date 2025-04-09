@@ -260,7 +260,7 @@ router.beforeEach((to, from, next) => {
         Swal.fire({
           title: "Are you sure?",
           text: "You will lose all your progress, are you sure you want to leave?",
-          imageUrl: "/src/assets/img/new-question2.png",
+          icon: "warning",
            
           showCancelButton: true,
           confirmButtonText: "Yes, cancel it",
@@ -287,7 +287,7 @@ router.beforeEach((to, from, next) => {
       Swal.fire({
         title: "Are you sure?",
         text: "You will lose all your progress, are you sure you want to leave?",
-        imageUrl: "/src/assets/img/new-question2.png",
+        icon: "warning",
          
         showCancelButton: true,
         confirmButtonText: "Yes, cancel it",

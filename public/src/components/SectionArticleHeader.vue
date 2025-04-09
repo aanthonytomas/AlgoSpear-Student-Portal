@@ -63,7 +63,7 @@
               Swal.fire({
                 title: "Completed",
                 text: "Allocated reading time completed",
-                imageUrl: "/src/assets/img/new-completed.png",
+                icon: "success"
                  
               }).then( async () => {
                 printDevLog("Reading Status:","Completed");

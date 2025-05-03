@@ -1,10 +1,10 @@
 # Interactive Learning System
 
 ## Our Team
-- **Software Developer** Mark Anthony Tomas
-- **System Analyst** John Lloyd Capule
-- **Quality Assurance** Beneric Francia
-- **Video Editor** Rodolfo Naz Jr
+- **👨‍💻Software Developer** Mark Anthony Tomas
+- **👨🏻‍🔧System Analyst** John Lloyd Capule
+- **🕵Quality Assurance** Beneric Francia
+- **🙋‍♂️Video Editor** Rodolfo Naz Jr
 
 ## Overview
 The **Interactive Learning System** is an educational platform designed to help learners understand Data Structures and Algorithms (DSA) through various learning materials, video tutorials, exercises, quizzes, and interactive visualizations. The system provides a structured learning experience where users can track their progress and enhance their understanding of theoretical concepts with practical applications.

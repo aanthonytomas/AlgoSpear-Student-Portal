@@ -48,6 +48,11 @@ Contributions are welcome! Please follow these steps:
 3. Commit your changes with clear messages.
 4. Push to your fork and submit a pull request.
 
+## Our Team
+- **Software Developer** Mark Anthony Tomas
+- **System Analyst** John Lloyd Capule
+- **Quality Assurance** Beneric Francia
+- **Video Editor** Rodolfo Naz Jr
 
 ## Contact
 For inquiries or support, feel free to reach out via GitHub Issues or contact me.
